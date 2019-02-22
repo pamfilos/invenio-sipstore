@@ -29,7 +29,7 @@ from ..signals import sipstore_archiver_status
 
 
 def get_md5_hex(content):
-    """Calculate MD5 checksum
+    """Calculate MD5 checksum.
 
     : param bytes content: Content to calculate the checksum.
 
@@ -38,8 +38,9 @@ def get_md5_hex(content):
     """
     return md5(content).hexdigest()
 
+
 def get_adler32_hex(content):
-    """Calculate Adler32 checksum
+    """Calculate Adler32 checksum.
 
     : param bytes content: Content to calculate the checksum.
 
@@ -48,10 +49,12 @@ def get_adler32_hex(content):
     """
     return hex(zlib.adler32(content, 1))
 
+
 CHECKSUM_ALGORITHMS = {
     "md5": get_md5_hex,
     "adler32": get_adler32_hex
 }
+
 
 class BaseArchiver(object):
     """Base archiver.
@@ -211,7 +214,7 @@ class BaseArchiver(object):
         )
 
     def _calculate_checksum(self, content):
-        """Calculate checksum for given content"""
+        """Calculate checksum for given content."""
         digest = CHECKSUM_ALGORITHMS[self.checksum_algorithm](content)
 
         return "{}:{}".format(self.checksum_algorithm, str(digest))
@@ -221,7 +224,8 @@ class BaseArchiver(object):
         filename = current_sipstore.sipmetadata_name_formatter(sipmetadata)
         filepath = os.path.join(self.metadata_dir, filename)
         return dict(
-            checksum=self._calculate_checksum(sipmetadata.content.encode('utf-8')),
+            checksum=self._calculate_checksum(
+                sipmetadata.content.encode('utf-8')),
             size=len(sipmetadata.content),
             filepath=filepath,
             fullpath=self.get_fullpath(filepath),

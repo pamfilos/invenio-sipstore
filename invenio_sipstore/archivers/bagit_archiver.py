@@ -241,7 +241,8 @@ class BagItArchiver(BaseArchiver):
             # which need to be written down to the archive
 
             # Helper mapping of UUID-tu-Data-Fileinfo
-            id2df = dict((fi['file_uuid'], fi) for fi in data_files)
+            id2df = dict((fi['file_uuid'], fi)
+                for fi in data_files if 'file_uuid' in fi)
             # Helper mapping of UUID-tu-Previous-Data-Fileinfo
             id2pdf = dict((fi['file_uuid'], fi) for fi in prev_data_files)
 
@@ -262,7 +263,8 @@ class BagItArchiver(BaseArchiver):
             # files (df_s - pdf_s)
             archived_uuids = df_s - pdf_s
 
-            data_files = []   # We will build the list of data files again
+            data_files = [fi for fi in data_files 
+                if (fi.get('fetched', False) and 'file_uuid' not in fi)]
             for uuid in fetched_uuids:
                 fi = id2pdf[uuid]
                 # If the file is attached to the new SIP, use the new filepath
